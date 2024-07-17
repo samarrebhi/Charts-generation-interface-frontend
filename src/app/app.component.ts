@@ -318,11 +318,101 @@ chartOptions3:Highcharts.Options = {
     },
    
     
-    yAxis: {
+    yAxis :{
       title: {
-        text: 'Temperature °C'
-      }
-    },
+         text: 'Wind speed (m/s)'
+      },
+      min: 0,
+      minorGridLineWidth: 0,
+      gridLineWidth: 0,
+      //alternateGridColor: null,
+      plotBands: [
+         { // Light air
+            from: 0.3,
+            to: 1.5,
+            color: 'rgba(68, 170, 213, 0.1)',
+            
+            label: {
+               text: 'Light air',
+               style: {
+                  color: '#606060'
+               }
+            }
+         }, 
+         { // Light breeze
+            from: 1.5,
+            to: 3.3,
+            color: 'rgba(0, 0, 0, 0)',
+            
+            label: {
+               text: 'Light breeze',
+               style: {
+                  color: '#606060'
+               }
+            }
+         }, 
+         { // Gentle breeze
+            from: 3.3,
+            to: 5.5,
+            color: 'rgba(68, 170, 213, 0.1)',
+            
+            label: {
+               text: 'Gentle breeze',
+               style: {
+                  color: '#606060'
+               }   
+            }
+         }, 
+         { // Moderate breeze
+            from: 5.5,
+            to: 8,
+            color: 'rgba(0, 0, 0, 0)',
+            
+            label: {
+               text: 'Moderate breeze',
+               style: {
+                  color: '#606060'
+               }
+            }
+         }, 
+         { // Fresh breeze
+            from: 8,
+            to: 11,
+            color: 'rgba(68, 170, 213, 0.1)',
+            
+            label: {
+               text: 'Fresh breeze',
+               style: {
+                  color: '#606060'
+               }
+            }
+         }, 
+         { // Strong breeze
+            from: 11,
+            to: 14,
+            color: 'rgba(0, 0, 0, 0)',
+            
+            label: {
+               text: 'Strong breeze',
+               style: {
+                  color: '#606060'
+               }
+            }   
+         }, 
+         { // High wind
+            from: 14,
+            to: 15,
+            color: 'rgba(68, 170, 213, 0.1)',
+            
+            label: {
+               text: 'High wind',
+               style: {
+                  color: '#606060'
+               }
+            }
+         }
+      ]
+   },
     tooltip: {
       valueSuffix: ' °C'
     },
@@ -498,7 +588,7 @@ chartOptions8:Highcharts.Options = {
       {
          type: 'spline',
          name: 'Average',
-         data: [3, 2.67, 3, 6.33, 3.33]
+         data: [3, 2.67, 8, 6.33, 3.33]
       },
       {
          type: 'pie',
@@ -852,19 +942,635 @@ chartOptionsapi6:Highcharts.Options = {
    series: [{
       type: 'column',
       data: [
-        { y: 29.9, color: '#ff0000' },
-        { y: 71.5, color: '#00ff00' },
+        { y: 29.9, color: '#0000ff' },
+        { y: 71.5, color: '#ff00ff' },
         { y: 106.4, color: '#0000ff' },
         { y: 129.2, color: '#ff00ff' },
-        { y: 144.0, color: '#ffff00' },
-        { y: 176.0, color: '#00ffff' },
-        { y: 135.6, color: '#ff9900' },
-        { y: 148.5, color: '#9900ff' },
-        { y: 216.4, color: '#0099ff' },
-        { y: 194.1, color: '#ff0099' },
-        { y: 95.6, color: '#99ff00' },
-        { y: 54.4, color: '#00ff99' }
+        { y: 144.0, color: '#0000ff' },
+        { y: 176.0, color: '#ff00ff' },
+        { y: 135.6, color: '#0000ff' },
+        { y: 148.5, color: '#ff00ff' },
+        { y: 216.4, color: '#0000ff' },
+        { y: 194.1, color: '#ff00ff' },
+        { y: 95.6, color: '#0000ff' },
+        { y: 54.4, color: '#ff00ff' }
       ]
     }]
 };
-} 
+
+
+////////////////////////
+
+   chartOptionsnew:Highcharts.Options =  {   
+      chart : {
+         
+         plotShadow: false
+      },
+      title : {
+         text: 'Browser market shares at a specific website, 2014'   
+      },
+      tooltip : {
+         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      plotOptions : {
+         pie: {
+            shadow: false,
+            center: ['50%', '50%'],
+            size:'45%',
+            innerSize: '20%'            
+         }
+      },
+      series : [{
+         type: 'pie',
+         name: 'Browser share',
+         data: [
+            ['Firefox',   45.0],
+            ['IE',       26.8],
+            {
+               name: 'Chrome',
+               y: 12.8,
+               sliced: true,
+               selected: true
+            },
+            ['Safari',    8.5],
+            ['Opera',     6.2],
+            ['Others',      0.7]
+         ]
+      }]
+   };
+
+   chartOptionsnew2:Highcharts.Options = {   
+      chart: {
+         type: 'area',
+         spacingBottom: 30
+      },
+      title: {
+         text: 'Fruit consumption *'
+      },
+      subtitle : {
+         text: '* Jane\'s banana consumption is unknown',
+         floating: true,
+         align: 'right',
+         verticalAlign: 'bottom',
+         y: 15
+      },
+      legend : {
+         layout: 'vertical',
+         align: 'left',
+         verticalAlign: 'top',
+         x: 150,
+         y: 100,
+         floating: true,
+         borderWidth: 1,
+         backgroundColor: 
+           '#FFFFFF'
+      },
+      xAxis:{
+         categories: ['Apples', 'Pears', 'Oranges', 'Bananas', 'Grapes', 'Plums', 'Strawberries', 'Raspberries']
+      },
+      yAxis : {
+         title: {
+            text: 'Y-Axis'
+         },
+        
+      },
+      tooltip : {
+         formatter: function () {
+            return '<b>' + this.series.name + '</b><br/>' +
+               this.x + ': ' + this.y;
+         }
+      },
+      plotOptions : {
+         area: {
+            fillOpacity: 0.5 
+         }
+      },
+      credits:{
+         enabled: false
+      },
+      series: [
+         {type: 'area',
+            name: 'John',
+            data: [0, 1, 4, 4, 5, 2, 3, 7]
+         }, 
+         {type: 'area',
+            name: 'Jane',
+            data: [1, 0, 3, null, 3, 1, 2, 1]
+         }
+      ]
+   };
+   hartOptionsnew3:Highcharts.Options = {         
+      chart : {
+         type: 'scatter',
+         margin: [70, 50, 60, 80], 
+         marginRight: 10,
+         events: {
+            click: function (e) {
+            
+              var x = e.layerX.valueOf
+              var y = e.layerY.valueOf
+
+              var series = this.series[0];
+              
+              series.addPoint([x, y]);
+           }
+        }
+      },
+      title : {
+         text: 'User supplied data'   
+      },   
+      subtitle : {
+         text: 'Click the plot area to add a point. Click a point to remove it.'
+      },
+      xAxis : {
+         gridLineWidth: 1,
+         minPadding: 0.2,
+         maxPadding: 0.2,
+         
+      },
+      yAxis : {
+         title: {
+            text: 'Value'
+         },
+         minPadding: 0.2,
+         maxPadding: 0.2,
+         
+         plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+         }]
+      },
+      plotOptions: {
+         series: {
+            lineWidth: 1,
+            point: {
+               events: {
+                  'click': function () {
+                     if (this.series.data.length > 1) {
+                        this.remove();
+                     }
+                  }
+               }
+            }
+         }
+      },
+      legend: {
+         enabled: false
+      },
+      exporting : {
+         enabled: false
+      },
+      series : [{
+         type:'scatter',
+         data: [[20, 20], [80, 80]]
+      }]
+   };
+   chartOptionsnew4:Highcharts.Options = {         
+      chart : {
+         
+      },
+      title : {
+         text: 'Source: WorldClimate.com'   
+      },   
+      subtitle : {
+         text: 'Average Monthly Temperature and Rainfall in Tokyo'
+      },
+      xAxis : {
+         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+         crosshair: true
+      },
+      yAxis : [
+         { // Primary yAxis
+            labels: {
+               format: '{value}\xB0C',
+               style: {
+                  color: '#E905F8'
+               }
+            },
+            title: {
+               text: 'Temperature',
+               style: {
+                  color: '#054BF8'
+               }
+            },
+            opposite: true
+         }, 
+         { // Secondary yAxis
+            title: {
+               text: 'Rainfall',
+               style: {
+                  color: '#009D4C'
+               }
+            },
+            labels: {
+               format: '{value} mm',
+               style: {
+                  color: '#9D0045'
+               }
+            }
+         },
+         { // Tertiary yAxis
+            gridLineWidth: 0,
+            title: {
+               text: 'Sea-Level Pressure',
+               style: {
+                  color:'#02E8F3'
+               }
+            },
+            labels: {
+               format: '{value} mb',
+               style: {
+                  color: '#9E1404'
+               }
+            },
+            opposite:true  
+         }
+      ],
+      tooltip: {
+         shared: true
+      },
+      legend: {
+         enabled:false
+      },
+      series : [
+         {
+            name: 'Rainfall',
+            type: 'column',
+            yAxis: 1,
+            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5,
+                    216.4, 194.1, 95.6, 54.4],
+            tooltip: {
+               valueSuffix: ' mm'
+            }
+         }, 
+         {
+            name: 'Sea-Level Pressure',
+            type: 'spline',
+            yAxis: 2,
+            data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2,
+                     1013.1, 1016.9, 1018.2, 1016.7],
+            marker: {
+               enabled: false
+            },
+            //ShortDot: 'shortdot',
+            tooltip: {
+               valueSuffix: ' mb'
+            }
+         },
+         {
+            name: 'Temperature',
+            type: 'spline',
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            tooltip: {
+               valueSuffix: '\xB0C'
+            }
+         }
+      ]
+   };
+   chartOptionsnew5:Highcharts.Options = {         
+      chart : {
+         type: 'spline'      
+      }, 
+      title : {
+         text: 'Wind speed during two days'   
+      },
+      subtitle : {
+         text: 'October 6th and 7th 2009 at two locations in Vik i Sogn, Norway'
+      },
+      xAxis : {
+         type: 'datetime',
+         labels: {
+            overflow: 'justify'
+         }
+      },
+      yAxis : {
+         title: {
+            text: 'Wind speed (m/s)'
+         },
+         min: 0,
+         minorGridLineWidth: 0,
+         gridLineWidth: 0,
+         //alternateGridColor: null,
+         plotBands: [
+            { // Light air
+               from: 0.3,
+               to: 1.5,
+               color: 'rgba(68, 170, 213, 0.1)',
+               label: {
+                  text: 'Light air',
+                  style: {
+                     color: '#606060'
+                  }
+               }
+            }, 
+            { // Light breeze
+               from: 1.5,
+               to: 3.3,
+               color: 'rgba(0, 0, 0, 0)',
+               label: {
+                  text: 'Light breeze',
+                  style: {
+                     color: '#606060'
+                  }
+               }
+            }, 
+            { // Gentle breeze
+               from: 3.3,
+               to: 5.5,
+               color: 'rgba(68, 170, 213, 0.1)',
+               label: {
+                  text: 'Gentle breeze',
+                  style: {
+                     color: '#606060'
+                  }   
+               }
+            }, 
+            { // Moderate breeze
+               from: 5.5,
+               to: 8,
+               color: 'rgba(0, 0, 0, 0)',
+               label: {
+                  text: 'Moderate breeze',
+                  style: {
+                     color: '#606060'
+                  }
+               }
+            }, 
+            { // Fresh breeze
+               from: 8,
+               to: 11,
+               color: 'rgba(68, 170, 213, 0.1)',
+               label: {
+                  text: 'Fresh breeze',
+                  style: {
+                     color: '#606060'
+                  }
+               }
+            }, 
+            { // Strong breeze
+               from: 11,
+               to: 14,
+               color: 'rgba(0, 0, 0, 0)',
+               label: {
+                  text: 'Strong breeze',
+                  style: {
+                     color: '#606060'
+                  }
+               }   
+            }, 
+            { // High wind
+               from: 14,
+               to: 15,
+               color: 'rgba(68, 170, 213, 0.1)',
+               label: {
+                  text: 'High wind',
+                  style: {
+                     color: '#606060'
+                  }
+               }
+            }
+         ]
+      },
+      tooltip : {
+         valueSuffix: ' m/s'
+      },
+      plotOptions : {
+         spline: {
+            lineWidth: 4,
+            states: {
+               hover: {
+                  lineWidth: 5
+               }
+            },
+            marker: {
+               enabled: false
+            },
+            pointInterval: 3600000, // one hour
+            pointStart: Date.UTC(2009, 9, 6, 0, 0, 0)
+         }
+      },
+      series : [
+         {type: 'spline'   ,
+            name: 'Vik i Sogn',      
+            data: [4.3, 5.1, 4.3, 5.2, 5.4, 4.7, 3.5, 4.1, 5.6, 7.4, 6.9, 7.1,
+               7.9, 7.9, 7.5, 6.7, 7.7, 7.7, 7.4, 7.0, 7.1, 5.8, 5.9, 7.4,
+               8.2, 8.5, 9.4, 8.1, 10.9, 10.4, 10.9, 12.4, 12.1, 9.5, 7.5,
+               7.1, 7.5, 8.1, 6.8, 3.4, 2.1, 1.9, 2.8, 2.9, 1.3, 4.4, 4.2,
+               3.0, 3.0]
+         }, 
+         {type: 'spline'   ,
+            name: 'Norway',
+            data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.3, 0.0,
+               0.0, 0.4, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+               0.0, 0.6, 1.2, 1.7, 0.7, 2.9, 4.1, 2.6, 3.7, 3.9, 1.7, 2.3,
+               3.0, 3.3, 4.8, 5.0, 4.8, 5.0, 3.2, 2.0, 0.9, 0.4, 0.3, 0.5, 0.4]
+         }
+      ],     
+      navigation : {
+         menuItemStyle: {
+            fontSize: '10px'
+         }
+      }    
+   };
+  
+   chartOptionsnew6 :Highcharts.Options= {   
+      chart: {
+         type: "spline"
+      },
+      title: {
+         text: "Monthly Average Temperature"
+      },
+      subtitle: {
+         text: "Source: WorldClimate.com"
+      },
+      xAxis:{
+         categories:["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      },
+      yAxis: {          
+         title:{
+            text:"Temperature °C"
+         } 
+      },
+      plotOptions: {
+         series: {
+            dataLabels: {
+               enabled: true
+            }
+         }
+      },
+      tooltip: {
+         valueSuffix:" °C"
+      },
+      series: [{type: "spline",
+         name: 'Tokyo',
+         data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2,26.5, 23.3, 18.3, 13.9, 9.6]
+      },
+      {type: "spline",
+         name: 'New York',
+         data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8,24.1, 20.1, 14.1, 8.6, 2.5]
+      },
+      {type: "spline",
+         name: 'Berlin',
+         data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+      },
+      {type: "spline",
+         name: 'London',
+         data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+      }]
+   };
+   chartOptionsnew7:Highcharts.Options = {   
+      chart: {
+         type: "area"
+      },
+      title: {
+        text: 'Historic and Estimated Worldwide Population Growth by Region'
+      },
+      subtitle : {
+        text: 'Source: Wikipedia.org'
+      },
+      xAxis:{
+        categories: ['1750', '1800', '1850', '1900', '1950', '1999', '2050'],
+        tickmarkPlacement: 'on',
+        
+      },
+      yAxis : {
+        title: {
+           text: 'Billions'
+        },
+       
+      },
+      tooltip : {
+        shared: true,
+        valueSuffix: ' millions'
+      },
+      plotOptions : {
+        area: {
+           stacking: 'percent',
+           lineColor: '#666666',
+           lineWidth: 1,
+           
+           marker: {
+              lineWidth: 1,
+              lineColor: '#666666'
+           }
+        }
+      },
+      credits:{
+        enabled: false
+      },
+      series: [
+         {type: "area",
+            name: 'Asia',
+            data: [502, 635, 809, 947, 1402, 3634, 5268]
+         }, 
+         {type: "area",
+            name: 'Africa',
+            data: [106, 107, 111, 133, 221, 767, 1766]
+         }, 
+         {type: "area",
+            name: 'Europe',
+            data: [163, 203, 276, 408, 547, 729, 628]
+         }, 
+         {type: "area",
+            name: 'America',
+            data: [18, 31, 54, 156, 339, 818, 1201]
+         }, 
+         {type: "area",
+            name: 'Oceania',
+            data: [2, 2, 2, 6, 13, 30, 46]
+         }
+      ]
+   };
+   chartOptionsnew8 :Highcharts.Options = {   
+      chart: {
+         type: 'bar'
+      },
+      title: {
+         text: 'Bar chart with negative values'
+      },
+      xAxis:{
+         categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']        
+      },     
+      series: [
+         {type: 'bar',
+            name: 'John',
+            data: [5, 3, 4, 7, 2]
+         }, 
+         {type: 'bar',
+            name: 'Jane',
+            data: [2, -2, -3, 2, 1]
+         }, 
+         {type: 'bar',
+            name: 'Joe',
+            data: [3, 4, 4, -2, 5]
+         }
+      ]
+   };
+   chartOptionsnew9 :Highcharts.Options= {   
+      chart: {
+        type: 'area',
+        inverted: true
+      },
+      title: {
+        text: 'Average fruit consumption during one week'
+      },
+      subtitle : {
+         style: {
+            position: 'absolute',
+            right: '0px',
+            bottom: '10px'
+         }
+      },
+      legend : {
+         layout: 'vertical',
+         align: 'left',
+         verticalAlign: 'top',
+         x: -150,
+         y: 100,
+         floating: true,
+         borderWidth: 1,
+         backgroundColor: 
+  
+               '#FFFFFF'
+      },
+      xAxis:{
+         categories: ['Monday','Tuesday','Wednesday','Thursday',
+            'Friday','Saturday','Sunday'] 
+      },
+      yAxis : {
+         title: {
+            text: 'Number of units'
+         },
+         
+         min:0
+      },
+      tooltip : {
+         formatter: function () {
+            return '<b>' + this.series.name + '</b><br/>' +
+               this.x + ': ' + this.y;
+         }
+      },
+      plotOptions : {
+         area: {
+            fillOpacity: 0.5 
+         }
+      },
+      credits:{
+         enabled: false
+      },
+      series: [
+         { type: 'area',
+            name: 'John',
+            data: [3, 4, 3, 5, 4, 10, 12]
+         }, 
+         { type: 'area',
+            name: 'Jane',
+            data: [1, 3, 4, 3, 3, 5, 4]
+         }
+      ]
+   };
+}
+
