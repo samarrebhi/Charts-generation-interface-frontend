@@ -1572,5 +1572,179 @@ chartOptionsapi6:Highcharts.Options = {
          }
       ]
    };
+   chartOptionsnew10:Highcharts.Options = {               
+      title : {
+         text: 'Scatter plot with regression line'   
+      },
+      xAxis : {
+         min: -0.5,
+         max: 5.5
+      },
+      yAxis : {
+         min: 0
+      },
+      series : [
+      {
+         type: 'line',
+         name: 'Regression Line',
+         data: [[0, 1.11], [5, 4.51]],
+         marker: {
+            enabled: false
+         },
+         states: {
+            hover: {
+               lineWidth: 0
+            }
+         },
+         enableMouseTracking: false
+      }, 
+      {
+         type: 'scatter',
+         name: 'Observations',
+         data: [1, 1.5, 2.8, 3.5, 3.9, 4.2],
+         marker: {
+            radius: 4
+         }
+      }]
+   };
+  
+   chartOptionsnew11:Highcharts.Options = {   
+      chart: {
+        type: 'bar'
+      },
+      title: {
+         text: 'Historic World Population by Region'
+      },
+      subtitle : {
+         text: 'Source: Wikipedia.org'  
+      },
+      legend : {
+         layout: 'vertical',
+         align: 'left',
+         verticalAlign: 'top',
+         x: 250,
+         y: 100,
+         floating: true,
+         borderWidth: 1,
+        
+         backgroundColor:
+               '#FFFFFF', shadow: true
+         },
+         xAxis:{
+            categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'], title: {
+            text: null
+         } 
+      },
+      yAxis : {
+         min: 0, title: {
+            text: 'Population (millions)', align: 'high'
+         },
+         labels: {
+            overflow: 'justify'
+         }
+      },
+      tooltip : {
+         valueSuffix: ' millions'
+      },
+      plotOptions : {
+         bar: {
+            dataLabels: {
+               enabled: true
+            }
+         },
+         series: {
+            stacking: 'normal'
+         }
+      },
+      credits:{
+         enabled: false
+      },
+      series: [
+         {type: 'bar',
+            name: 'Year 1800',
+            data: [107, 31, 635, 203, 2]
+         }, 
+         {type: 'bar',
+            name: 'Year 1900',
+            data: [133, 156, 947, 408, 6]
+         }, 
+         {type: 'bar',
+            name: 'Year 2008',
+            data: [973, 914, 4054, 732, 34]      
+         }
+      ]
+   };
+   chartOptionsnew12:Highcharts.Options  = {   
+      chart : {
+         type: 'column'
+      },
+      title : {
+         text: 'World\'s largest cities per 2014'   
+      },
+      subtitle: {
+         text: 'Source: <a href = "http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+      },
+      xAxis : {
+         type: 'category',
+         labels: {
+            rotation: -45,
+            style: {
+               fontSize: '13px',
+               fontFamily: 'Verdana, sans-serif'
+            }
+         }
+      },
+      yAxis : {
+         min: 0,
+         title: {
+            text: 'Population (millions)'
+         }
+      },
+      tooltip : {
+         pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+      },
+      credits : {
+         enabled: false
+      },
+      series : [
+         {type: 'column',
+            name: 'Population',
+            data: [
+               ['Shanghai', 23.7],
+               ['Lagos', 16.1],
+               ['Instanbul', 14.2],
+               ['Karachi', 14.0],
+               ['Mumbai', 12.5],
+               ['Moscow', 12.1],
+               ['Sao Paulo', 11.8],
+               ['Beijing', 11.7],
+               ['Guangzhou', 11.1],
+               ['Delhi', 11.1],
+               ['Shenzhen', 10.5],
+               ['Seoul', 10.4],
+               ['Jakarta', 10.0],
+               ['Kinshasa', 9.3],
+               ['Tianjin', 9.3],
+               ['Tokyo', 9.0],
+               ['Cairo', 8.9],
+               ['Dhaka', 8.9],
+               ['Mexico City', 8.9],
+               ['Lima', 8.9]
+            ],
+            dataLabels: {
+               enabled: true,
+               rotation: -90,
+               color: '#FFFFFF',
+               align: 'right',
+               format: '{point.y:.1f}', // one decimal
+               y: 10, // 10 pixels down from the top
+               style: {
+                  fontSize: '13px',
+                  fontFamily: 'Verdana, sans-serif'
+               }
+            }
+         }
+      ]
+   };
 }
 
