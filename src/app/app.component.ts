@@ -919,7 +919,11 @@ chartOptionsapi6:Highcharts.Options = {
       this.highcharts.chart('chartContainerapi6', this.chartOptionsapi6);
     }
  }
- chartOptionssss:Highcharts.Options = {      
+ 
+
+
+//////////////////////// nouveaux charts statiques
+chartOptionssss:Highcharts.Options = {      
    chart: {
       type: 'column',
       margin: 75,
@@ -957,9 +961,6 @@ chartOptionsapi6:Highcharts.Options = {
       ]
     }]
 };
-
-
-////////////////////////
 
    chartOptionsnew:Highcharts.Options =  {   
       chart : {
@@ -1736,8 +1737,8 @@ chartOptionsapi6:Highcharts.Options = {
                rotation: -90,
                color: '#FFFFFF',
                align: 'right',
-               format: '{point.y:.1f}', // one decimal
-               y: 10, // 10 pixels down from the top
+               format: '{point.y:.1f}', 
+               y: 10, 
                style: {
                   fontSize: '13px',
                   fontFamily: 'Verdana, sans-serif'
