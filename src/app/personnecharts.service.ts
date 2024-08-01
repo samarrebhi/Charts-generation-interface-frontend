@@ -35,5 +35,7 @@ export class PersonnechartsService {
   getallgouv(): Observable<Gouvernerat[]> {
     return this.http.get<Gouvernerat[]>(`${this.baseUrl}/getallgouv`);
   }
+
+  
   
 }

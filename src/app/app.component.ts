@@ -59,7 +59,6 @@ chartOptionsapi : Highcharts.Options = {
    series : []
 };
 
- 
 ////// area chart from backend
 chartOptionsapi2: Highcharts.Options = {
    chart: {
@@ -237,10 +236,13 @@ chartOptionsapi6:Highcharts.Options = {
 ///////////////////////////// une function for all
 fetchAllData(): void {
    this.s.getallgouv().subscribe((data) => {
+    /// calcul de nb des personnes total par gouv
      const totalPersons = data.reduce((acc, gouv) => acc + gouv.personneList.length, 0);
+
      const categories = data.map((gouv) => gouv.gouverneratLibelle);
      const seriesData = data.map((gouv) => ({
        name: gouv.gouverneratLibelle,
+       // calcul du pourcentage
        y: (gouv.personneList.length / totalPersons) * 100,
        persons: gouv.personneList.length
      }));
@@ -318,6 +320,8 @@ fetchAllData(): void {
      this.highcharts.chart('chartContainerapi6', this.chartOptionsapi6);
    }
  }
+
+ 
 
 }
 

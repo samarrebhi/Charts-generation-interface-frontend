@@ -6,3 +6,6 @@ export class Gouvernerat {
     personneList!:Personne[];
 
   }
+
+
+  
