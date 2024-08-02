@@ -1,0 +1,58 @@
+.chart-form {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+  }
+
+  .chart-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .chart-form label {
+    display: block;
+    margin: 10px 0 5px;
+  }
+
+  .chart-form input,
+  .chart-form select,
+  .chart-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .chart-form .radio-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .chart-form .radio-group label {
+    flex: 1;
+    text-align: center;
+  }
+
+  .chart-form .radio-group input {
+    margin-right: 5px;
+  }
+
+  .chart-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0253af;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .chart-form button:hover {
+    background-color: #0056b3;
+  }
