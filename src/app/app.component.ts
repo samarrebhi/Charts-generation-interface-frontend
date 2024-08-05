@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HighchartsChartModule } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
+import highcharts3D from 'highcharts/highcharts-3d';
 import { PersonnechartsService } from './personnecharts.service';
 
 import { MatInputModule } from '@angular/material/input';
@@ -11,14 +12,13 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import highcharts3D from 'highcharts/highcharts-3d';
 
 highcharts3D(Highcharts);
 
 type ChartType = 'line' | 'bar' | 'pie' | 'column';
 
 interface ChartData {
-  categories: string[];
+  categories: any[];
   series: Highcharts.SeriesOptionsType[];
 }
 
@@ -39,6 +39,10 @@ export class AppComponent implements OnInit {
   isSqlQuery = false;
   isColumnChoice = false;
 
+  attributes: string[] = [];  // Array to store primary attribute names of the main entity
+  itemNames: string[] = []; // For item name dropdown options
+  itemValues: string[] = []; // For item value dropdown options
+
   constructor(private s: PersonnechartsService, private fb: FormBuilder) {
     this.chartForm = this.fb.group({
       title: [''],
@@ -48,75 +52,68 @@ export class AppComponent implements OnInit {
       yAxisTitle: [''],
       dataType: this.fb.group({
         type: [''],
-        sqlQuery: [''],
-        itemNames: [''],
-        itemValues: ['']
-      })
+        sqlQuery: ['']
+      }),
+      itemNames: [],
+      itemValues: []
     });
   }
 
   ngOnInit(): void {
-    this.getallsales();
+    this.getAllData();
   }
 
-  attributes: string[] = [];  // Array to store primary attribute names of the main entity
-  nestedAttributes: { [key: string]: string[] } = {};  // Object to store nested attribute names of array attributes
-
-  itemNames: string[] = []; // For item name dropdown options
-  itemValues: string[] = []; // For item value dropdown options
-
-  getallsales(): void {
+  getAllData(): void {
     this.s.getallsales().subscribe(
-      (data: any[]) => {
-        console.log('Fetched sales:', data);
-
-        if (data.length > 0) {
-          const firstItem = data[0];
-          console.log('First item:', firstItem);
-
-          if (firstItem) {
-            // Extract primary attribute names
-            this.attributes = Object.keys(firstItem);
-            console.log('Primary attributes:', this.attributes);
-
-            // Extract and log nested attribute names
-            this.nestedAttributes = {}; // Reset nestedAttributes
-
-            this.attributes.forEach(attr => {
-              const value = firstItem[attr];
-              if (typeof value === 'object' && !Array.isArray(value)) {
-                // Handle nested objects
-                this.nestedAttributes[attr] = Object.keys(value);
-                console.log(`Nested attributes for "${attr}":`, this.nestedAttributes[attr]);
-              } else if (Array.isArray(value)) {
-                // Handle arrays
-                this.nestedAttributes[attr] = value.length > 0 && typeof value[0] === 'object' ? Object.keys(value[0]) : ['index'];
-                console.log(`Array attributes for "${attr}":`, this.nestedAttributes[attr]);
-              } else {
-                // Handle simple attributes
-                this.nestedAttributes[attr] = [];
-                console.log(`Simple attribute for "${attr}": No nested attributes`);
-              }
-            });
-
-            // Update item names and values dropdowns
-            this.updateDropdowns();
-          }
-        }
+      (data: any) => {
+        console.log('Fetched data:', data);
+        const allAttributes = this.extractAttributesFromData(data);
+        this.itemNames = Array.from(new Set(allAttributes));
+        this.itemValues = Array.from(new Set(allAttributes)); // Adjust as needed
       },
       (error) => {
-        console.error('Error fetching sales:', error);
+        console.error('Error fetching data:', error);
       }
     );
   }
 
-  updateDropdowns(): void {
-    // Flatten primary attributes and nested keys
-    this.itemNames = this.attributes.flatMap(attr => [attr, ...this.nestedAttributes[attr]]);
-    this.itemValues = [...this.attributes]; // Adjust based on your needs
+  extractAttributesFromData(data: any): string[] {
+    const attributes: Set<string> = new Set();
+    const extractFromObject = (obj: any) => {
+      if (obj && typeof obj === 'object') {
+        Object.keys(obj).forEach(key => {
+          attributes.add(key);
+          if (Array.isArray(obj[key])) {
+            obj[key].forEach(item => extractFromObject(item));
+          } else if (typeof obj[key] === 'object') {
+            extractFromObject(obj[key]);
+          }
+        });
+      }
+    };
 
-    console.log('Item names:', this.itemNames);
-    console.log('Item values:', this.itemValues);
+    if (Array.isArray(data)) {
+      data.forEach(item => extractFromObject(item));
+    } else {
+      extractFromObject(data);
+    }
+    return Array.from(attributes);
+  }
+
+  onDropdownChange(event: Event, type: 'itemNames' | 'itemValues'): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedValue = selectElement.value;
+    console.log(`Dropdown changed: ${type}, Selected Value: ${selectedValue}`);
+
+    this.updateDropdowns();
+  }
+
+  updateDropdowns(): void {
+    const selectedItemNames = this.chartForm.get('itemNames')?.value;
+    const selectedItemValues = this.chartForm.get('itemValues')?.value;
+
+    this.itemNames = this.attributes.filter(attr => attr !== selectedItemValues);
+    this.itemValues = this.attributes.filter(attr => attr !== selectedItemNames);
   }
 
   onChartTypeChange(event: any): void {
@@ -139,20 +136,19 @@ export class AppComponent implements OnInit {
     });
   }
 
-  processData(data: any[], chartType: ChartType, formValues: any): ChartData {
-    // Handle possible null or undefined values in data
-    const itemName = formValues.dataType.itemNames;
-    const itemValue = formValues.dataType.itemValues;
+  processData(data: any, chartType: ChartType, formValues: any): ChartData {
+    const itemName = formValues.itemNames;
+    const itemValue = formValues.itemValues;
 
-    const categories = Array.from(new Set(data.map(item => item[itemName]).filter(item => item != null)));
+    const categories = Array.from(new Set(data.map((item: { [x: string]: any; }) => item[itemName])));
     const seriesData = [{
       name: itemValue,
-      data: categories.map(category => data.filter(item => item[itemName] === category).map(item => item[itemValue]).reduce((a, b) => a + b, 0)),
+      data: categories.map(category => data
+        .filter((item: { [x: string]: unknown; }) => item[itemName] === category)
+        .map((item: { [x: string]: any; }) => item[itemValue])
+        .reduce((a: any, b: any) => a + b, 0)),
       type: chartType
     }];
-
-    console.log('categories:', categories);
-    console.log('series:', seriesData);
 
     return {
       categories,
@@ -161,64 +157,32 @@ export class AppComponent implements OnInit {
   }
 
   generateChart(data: ChartData, chartType: ChartType, formValues: any): void {
+    
     const commonOptions: Highcharts.Options = {
       title: { text: formValues.title },
       subtitle: { text: formValues.subtitle },
       xAxis: { categories: data.categories, title: { text: formValues.xAxisTitle } },
       yAxis: { title: { text: formValues.yAxisTitle } },
-      series: data.series
+      series: data.series,
+      
     };
 
-    switch (chartType) {
-      case 'pie':
-        this.chartOptions = {
-          ...commonOptions,
-          chart: { type: 'pie' },
-          tooltip: { pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>' },
-          plotOptions: {
-            pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: { enabled: true, format: '<b>{point.name}</b>: {point.percentage:.1f} %' }
-            }
-          }
-        };
-        break;
-      case 'bar':
-        this.chartOptions = {
-          ...commonOptions,
-          chart: { type: 'bar' },
-          tooltip: { valueSuffix: ' units' }
-        };
-        break;
-      case 'line':
-        this.chartOptions = {
-          ...commonOptions,
-          chart: { type: 'line' },
-          tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
-          plotOptions: {
-            line: {
-              dataLabels: { enabled: true, format: '{point.y}' }
-            }
-          }
-        };
-        break;
-      case 'column':
-        this.chartOptions = {
-          ...commonOptions,
-          chart: { type: 'column' },
-          tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
-          plotOptions: {
-            column: {
-              dataLabels: { enabled: true, format: '{point.y}' }
-            }
-          }
-        };
-        break;
-      default:
-        throw new Error('Unsupported chart type');
-    }
+    const chartOptions: Highcharts.Options = {
+      ...commonOptions,
+      chart: { type: chartType },
+      tooltip: {
+        pointFormat: chartType === 'pie' 
+          ? '{series.name}: <b>{point.percentage:.1f}%</b>'
+          : '{series.name}: <b>{point.y}</b>'
+      },
+      plotOptions: {
+        [chartType]: {
+          dataLabels: { enabled: true, format: '{point.y}' }
+        }
+      }
+    };
 
+    this.chartOptions = chartOptions;
     Highcharts.chart('chartContainer', this.chartOptions);
   }
 }

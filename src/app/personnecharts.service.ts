@@ -35,7 +35,8 @@ export class PersonnechartsService {
   constructor(private http: HttpClient) { }
   ///// lel json server
   private apiUrl = 'http://localhost:3000/cities';
-private salesapi='http://localhost:8088/api/sales'
+//private salesapi='http://localhost:8088/api/sales/getsales'
+private salesapi='http://localhost:8088/api/sales/getallentities'
 
  getCities(): Observable<City[]> {
     return this.http.get<City[]>(this.apiUrl);
