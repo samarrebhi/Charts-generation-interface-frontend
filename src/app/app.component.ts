@@ -39,9 +39,9 @@ export class AppComponent implements OnInit {
   isSqlQuery = false;
   isColumnChoice = false;
 
-  attributes: string[] = [];  // Array to store primary attribute names of the main entity
-  itemNames: string[] = []; // For item name dropdown options
-  itemValues: string[] = []; // For item value dropdown options
+  attributes: string[] = []; 
+  itemNames: string[] = []; 
+  itemValues: string[] = []; 
 
   constructor(private s: PersonnechartsService, private fb: FormBuilder) {
     this.chartForm = this.fb.group({
@@ -50,9 +50,10 @@ export class AppComponent implements OnInit {
       chartType: ['pie'],
       xAxisTitle: [''],
       yAxisTitle: [''],
+      sqlQuery: [''],
       dataType: this.fb.group({
         type: [''],
-        sqlQuery: ['']
+        
       }),
       itemNames: [],
       itemValues: []
@@ -107,30 +108,48 @@ export class AppComponent implements OnInit {
     return Array.from(attributes);
   }
   
- 
-  
-
   onChartTypeChange(event: any): void {
     const selectedType = event.target.value;
     this.showAxisTitles = ['bar', 'column', 'line'].includes(selectedType);
   }
-
   onDataTypeChange(type: string): void {
     this.isSqlQuery = type === 'sql';
     this.isColumnChoice = type === 'columnChoice';
   }
-
   onSubmit(): void {
     const formValues = this.chartForm.value;
     const chartType = formValues.chartType as ChartType;
-
+   
     this.s.getallsales().subscribe((data) => {
       const processedData = this.processData(data, chartType, formValues);
       this.generateChart(processedData, chartType, formValues);
     });
-  }
 
-  
+/////partiesqlquery
+const sqlQuery = this.chartForm.get('sqlQuery')?.value;
+
+console.log('sqlQuery:',sqlQuery);
+
+if (sqlQuery) {
+  this.s.executeQuery(sqlQuery).subscribe(
+    (response: any) => {
+    
+      const sqlQueryrespondedata=response;
+      console.log('Response from server:', sqlQueryrespondedata);
+
+    },
+    (error) => {
+      console.error('Error sending data:', error);
+     alert('Error sending sql query');
+    }
+  );}
+
+
+}
+
+
+
+
 processData(data: any, chartType: ChartType, formValues: any): ChartData {
   const itemName = formValues.itemNames;
   const itemValue = formValues.itemValues;
@@ -188,12 +207,6 @@ processData(data: any, chartType: ChartType, formValues: any): ChartData {
     series: [series]
   };
 }
-
-
-
-  
-
-
   generateChart(data: ChartData, chartType: ChartType, formValues: any): void {
     const commonOptions: Highcharts.Options = {
       title: { text: formValues.title },

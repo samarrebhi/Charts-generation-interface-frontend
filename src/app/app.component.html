@@ -1,3 +1,8 @@
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 <form [formGroup]="chartForm" (ngSubmit)="onSubmit()" class="chart-form">
   <h2>Create a Chart</h2>
 
@@ -60,6 +65,7 @@
   <button type="submit">Generate Chart</button>
 
   <highcharts-chart *ngIf="chartOptions" style="width: 100%; height: 400px"
+  class="highcharts-description"
     [Highcharts]="highcharts" id="chartContainergenerated"
     [options]="chartOptions"
     style="width: 100%; height: 100; display: block;">
