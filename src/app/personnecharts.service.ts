@@ -43,8 +43,8 @@ private salesapi='http://localhost:8088/api/sales/getallentities'
   }
   /////////////////
 
-  getallsales(): Observable<any> {
-    return this.http.get<any>(this.salesapi);
+  getallsales(): Observable<any[]> {
+    return this.http.get<any[]>(this.salesapi);
   }
 ////////////////::
   private baseUrl = 'http://localhost:8088/Personnes'; 

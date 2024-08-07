@@ -1,15 +1,13 @@
 <form [formGroup]="chartForm" (ngSubmit)="onSubmit()" class="chart-form">
   <h2>Create a Chart</h2>
 
-  <!-- Title Input -->
   <label for="title">Title:</label>
   <input id="title" type="text" formControlName="title">
 
-  <!-- Subtitle Input -->
+
   <label for="subtitle">Subtitle:</label>
   <input id="subtitle" type="text" formControlName="subtitle">
 
-  <!-- Chart Type Selection -->
   <label for="chartType">Chart Type:</label>
   <select id="chartType" formControlName="chartType" (change)="onChartTypeChange($event)">
     <option value="pie">Pie</option>
@@ -18,7 +16,7 @@
     <option value="line">Line</option>
   </select>
 
-  <!-- Conditional Inputs for Bar, Column, Line -->
+
   <div *ngIf="showAxisTitles">
     <label for="xAxisTitle">X-Axis Title:</label>
     <input id="xAxisTitle" type="text" formControlName="xAxisTitle">
@@ -27,7 +25,7 @@
     <input id="yAxisTitle" type="text" formControlName="yAxisTitle">
   </div>
 
-  <!-- Data Type Selection -->
+
   <label>Choose your Visualized Data by:</label>
   <div formGroupName="dataType" class="radio-group">
     <label>
@@ -38,32 +36,31 @@
     </label>
   
   </div>
-  <!-- SQL Query Input -->
+
   <div *ngIf="isSqlQuery">
     <label for="sqlQuery">SQL Query:</label>
     <textarea id="sqlQuery" formControlName="sqlQuery"></textarea>
   </div>
 
-  <!-- Column Choice Selection -->
   <div *ngIf="isColumnChoice">
     <label for="itemNames">X-Axis Data:</label>
-    <select id="itemNames" formControlName="itemNames" (change)="onDropdownChange($event, 'itemNames')">
+    <select id="itemNames" formControlName="itemNames" >
       <option *ngFor="let attr of itemNames" [value]="attr">{{ attr }}</option>
     </select>
   
     <label for="itemValues">Y-Axis Data:</label>
-    <select id="itemValues" formControlName="itemValues" (change)="onDropdownChange($event, 'itemValues')">
+    <select id="itemValues" formControlName="itemValues">
       <option *ngFor="let attr of itemValues" [value]="attr">{{ attr }}</option>
     </select>
   </div>
   
   
 
-  <!-- Validation Button -->
+
   <button type="submit">Generate Chart</button>
 
   <highcharts-chart *ngIf="chartOptions" style="width: 100%; height: 400px"
-    [Highcharts]="highcharts" id="chartContainer"
+    [Highcharts]="highcharts" id="chartContainergenerated"
     [options]="chartOptions"
     style="width: 100%; height: 100; display: block;">
   </highcharts-chart>

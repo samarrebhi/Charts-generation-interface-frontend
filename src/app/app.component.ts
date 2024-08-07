@@ -61,6 +61,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllData();
+   
   }
 
   getAllData(): void {
@@ -69,7 +70,7 @@ export class AppComponent implements OnInit {
         console.log('Fetched data:', data);
         const allAttributes = this.extractAttributesFromData(data);
         this.itemNames = Array.from(new Set(allAttributes));
-        this.itemValues = Array.from(new Set(allAttributes)); // Adjust as needed
+        this.itemValues = Array.from(new Set(allAttributes)); 
       },
       (error) => {
         console.error('Error fetching data:', error);
@@ -79,42 +80,35 @@ export class AppComponent implements OnInit {
 
   extractAttributesFromData(data: any): string[] {
     const attributes: Set<string> = new Set();
+    
+    // Recursive function to traverse through objects and arrays
     const extractFromObject = (obj: any) => {
       if (obj && typeof obj === 'object') {
         Object.keys(obj).forEach(key => {
-          attributes.add(key);
-          if (Array.isArray(obj[key])) {
-            obj[key].forEach(item => extractFromObject(item));
-          } else if (typeof obj[key] === 'object') {
-            extractFromObject(obj[key]);
+          // Skip numeric keys
+          if (isNaN(Number(key))) {
+            attributes.add(key);
+          }
+          const value = obj[key];
+  
+          // Recursively process arrays
+          if (Array.isArray(value)) {
+            value.forEach((item: any) => extractFromObject(item));
+          } 
+          // Recursively process nested objects
+          else if (typeof value === 'object') {
+            extractFromObject(value);
           }
         });
       }
     };
-
-    if (Array.isArray(data)) {
-      data.forEach(item => extractFromObject(item));
-    } else {
-      extractFromObject(data);
-    }
+  
+    extractFromObject(data);
     return Array.from(attributes);
   }
-
-  onDropdownChange(event: Event, type: 'itemNames' | 'itemValues'): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedValue = selectElement.value;
-    console.log(`Dropdown changed: ${type}, Selected Value: ${selectedValue}`);
-
-    this.updateDropdowns();
-  }
-
-  updateDropdowns(): void {
-    const selectedItemNames = this.chartForm.get('itemNames')?.value;
-    const selectedItemValues = this.chartForm.get('itemValues')?.value;
-
-    this.itemNames = this.attributes.filter(attr => attr !== selectedItemValues);
-    this.itemValues = this.attributes.filter(attr => attr !== selectedItemNames);
-  }
+  
+ 
+  
 
   onChartTypeChange(event: any): void {
     const selectedType = event.target.value;
@@ -136,53 +130,160 @@ export class AppComponent implements OnInit {
     });
   }
 
-  processData(data: any, chartType: ChartType, formValues: any): ChartData {
-    const itemName = formValues.itemNames;
-    const itemValue = formValues.itemValues;
+  
+processData(data: any, chartType: ChartType, formValues: any): ChartData {
+  const itemName = formValues.itemNames;
+  const itemValue = formValues.itemValues;
 
-    const categories = Array.from(new Set(data.map((item: { [x: string]: any; }) => item[itemName])));
-    const seriesData = [{
-      name: itemValue,
-      data: categories.map(category => data
-        .filter((item: { [x: string]: unknown; }) => item[itemName] === category)
-        .map((item: { [x: string]: any; }) => item[itemValue])
-        .reduce((a: any, b: any) => a + b, 0)),
-      type: chartType
-    }];
+  const categories = Array.from(new Set(data.map((item: { [x: string]: any; }) => item[itemName])));
 
-    return {
-      categories,
-      series: seriesData
-    };
+  const seriesData = categories.map(category => ({
+    name: category,
+    y: data
+      .filter((item: { [x: string]: unknown; }) => item[itemName] === category)
+      .map((item: { [x: string]: any; }) => item[itemValue])
+      .reduce((a: any, b: any) => a + b, 0)
+  }));
+
+  let series: Highcharts.SeriesOptionsType;
+
+  switch (chartType) {
+    case 'line':
+      series = {
+        type: 'line',
+        name: itemValue,
+        data: seriesData
+      } as Highcharts.SeriesLineOptions;
+      break;
+    case 'column':
+      series = {
+        type: 'column',
+        name: itemValue,
+        data: seriesData
+      } as Highcharts.SeriesColumnOptions;
+      break;
+    case 'bar':
+      series = {
+        type: 'bar',
+        name: itemValue,
+        data: seriesData
+      } as Highcharts.SeriesBarOptions;
+      break;
+    case 'pie':
+      series = {
+        type: 'pie',
+        name: itemValue,
+        data: seriesData.map(item => ({
+          name: item.name,
+          y: item.y
+        }))
+      } as Highcharts.SeriesPieOptions;
+      break;
+    default:
+      throw new Error(`Unsupported chart type: ${chartType}`);
   }
 
+  return {
+    categories,
+    series: [series]
+  };
+}
+
+
+
+  
+
+
   generateChart(data: ChartData, chartType: ChartType, formValues: any): void {
-    
     const commonOptions: Highcharts.Options = {
       title: { text: formValues.title },
       subtitle: { text: formValues.subtitle },
       xAxis: { categories: data.categories, title: { text: formValues.xAxisTitle } },
       yAxis: { title: { text: formValues.yAxisTitle } },
       series: data.series,
-      
+      chart: {type: chartType ,
+      }
+     
     };
+  
+   
+    let plotOptions: Highcharts.PlotOptions = {};
+  
+    
+    switch (chartType) {
+      case 'line':
+        plotOptions = {
+          line: {
+            dataLabels: { enabled: true, format: '{point.y:.2f}' },
+            marker: { enabled: true },
+            animation: { duration: 1000 }
+          }
+        };
+        break;
+  
+      case 'column':
+        plotOptions = {
+          column: {
+            dataLabels: { enabled: true, format: '{point.y:.2f}' },
+            animation: { duration: 1000 },
+            pointPadding: 0.1,
+            borderWidth: 0
+          }
+        };
+        break;
+  
+      case 'bar':
+        plotOptions = {
+          bar: {
+            dataLabels: { enabled: true, format: '{point.y:.2f}' },
+            animation: { duration: 1000 },
+            pointPadding: 0.2,
+            borderWidth: 0
+          }
+        };
+        break;
+  
+      case 'pie':
+        plotOptions = {
+          pie: {
+            dataLabels: { enabled: true, format:'{point.name}: <b>{point.percentage:.2f}%</b>' },
+            innerSize: '50%',
+            size: '100%',
+           
+            animation: { duration: 1500 }
+          }
+        };
+        break;
+  
+      default:
+        console.error('Unsupported chart type:', chartType);
+        return;
+    }
+  
 
     const chartOptions: Highcharts.Options = {
       ...commonOptions,
-      chart: { type: chartType },
-      tooltip: {
-        pointFormat: chartType === 'pie' 
-          ? '{series.name}: <b>{point.percentage:.1f}%</b>'
-          : '{series.name}: <b>{point.y}</b>'
-      },
-      plotOptions: {
-        [chartType]: {
-          dataLabels: { enabled: true, format: '{point.y}' }
-        }
-      }
+      
+      plotOptions, 
+      
+      
+
     };
 
-    this.chartOptions = chartOptions;
-    Highcharts.chart('chartContainer', this.chartOptions);
+   
+  
+ 
+    console.log('Chart Options:', chartOptions);
+  
+
+    try {
+      this.chartOptions = chartOptions;
+      Highcharts.chart('chartContainergenerated',  this.chartOptions);
+    } catch (error) {
+    //  alert("enable to create chart")
+      console.error('Error creating chart:', error);
+    }
   }
+
+ 
 }
