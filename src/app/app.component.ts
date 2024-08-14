@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
   attributes: string[] = []; 
   itemNames: string[] = []; 
   itemValues: string[] = []; 
+  responsive: any;
 
   constructor(private s: PersonnechartsService, private fb: FormBuilder) {
     this.chartForm = this.fb.group({
@@ -74,7 +75,7 @@ export class AppComponent implements OnInit {
         this.itemValues = Array.from(new Set(allAttributes)); 
       },
       (error) => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data for attributes:', error);
       }
     );
   }
@@ -82,21 +83,18 @@ export class AppComponent implements OnInit {
   extractAttributesFromData(data: any): string[] {
     const attributes: Set<string> = new Set();
     
-    // Recursive function to traverse through objects and arrays
+    
     const extractFromObject = (obj: any) => {
       if (obj && typeof obj === 'object') {
         Object.keys(obj).forEach(key => {
-          // Skip numeric keys
           if (isNaN(Number(key))) {
             attributes.add(key);
           }
           const value = obj[key];
   
-          // Recursively process arrays
           if (Array.isArray(value)) {
             value.forEach((item: any) => extractFromObject(item));
           } 
-          // Recursively process nested objects
           else if (typeof value === 'object') {
             extractFromObject(value);
           }
@@ -119,49 +117,64 @@ export class AppComponent implements OnInit {
   onSubmit(): void {
     const formValues = this.chartForm.value;
     const chartType = formValues.chartType as ChartType;
+
+   if(this.isColumnChoice)
+    { this.s.getallsales().subscribe((data) => {
+    const processedData = this.processData(data, chartType, formValues);
+    this.generateChart(processedData, chartType, formValues);
+  });}
+  else if (this.isSqlQuery){
    
-    this.s.getallsales().subscribe((data) => {
-      const processedData = this.processData(data, chartType, formValues);
-      this.generateChart(processedData, chartType, formValues);
-    });
 
 /////partiesqlquery
 const sqlQuery = this.chartForm.get('sqlQuery')?.value;
-
 console.log('sqlQuery:',sqlQuery);
 
 if (sqlQuery) {
   this.s.executeQuery(sqlQuery).subscribe(
     (response: any) => {
-    
       const sqlQueryrespondedata=response;
-      console.log('Response from server:', sqlQueryrespondedata);
 
+      console.log('Response from server after sql:', sqlQueryrespondedata);
+      
+      const processedData = this.processData(sqlQueryrespondedata, chartType, formValues);
+      
+      console.log('processedata:', processedData);
+      
+      this.generateChart(processedData, chartType, formValues);
     },
     (error) => {
       console.error('Error sending data:', error);
      alert('Error sending sql query');
     }
-  );}
-
+  );}}
 
 }
 
-
-
-
 processData(data: any, chartType: ChartType, formValues: any): ChartData {
-  const itemName = formValues.itemNames;
-  const itemValue = formValues.itemValues;
+  let itemName: string;
+  let itemValue: string;
+  
+  const sqlQuery = this.chartForm.get('sqlQuery')?.value;
+  
+  if (sqlQuery) {
+    
+    itemName = Object.keys(data[0])[0]; 
+    itemValue = Object.keys(data[0])[1]; 
+  } else {
+   
+    itemName = formValues.itemNames;
+    itemValue = formValues.itemValues;
+  }
 
-  const categories = Array.from(new Set(data.map((item: { [x: string]: any; }) => item[itemName])));
+  const categories = Array.from(new Set(data.map((item: { [key: string]: any }) => item[itemName])));
 
   const seriesData = categories.map(category => ({
     name: category,
     y: data
-      .filter((item: { [x: string]: unknown; }) => item[itemName] === category)
-      .map((item: { [x: string]: any; }) => item[itemValue])
-      .reduce((a: any, b: any) => a + b, 0)
+      .filter((item: { [key: string]: any }) => item[itemName] === category)
+      .map((item: { [key: string]: any }) => item[itemValue])
+      .reduce((a: number, b: number) => a + b, 0)
   }));
 
   let series: Highcharts.SeriesOptionsType;
@@ -219,7 +232,7 @@ processData(data: any, chartType: ChartType, formValues: any): ChartData {
      
     };
   
-   
+   console.log('daata coming to generatechartfunction',data);
     let plotOptions: Highcharts.PlotOptions = {};
   
     
@@ -227,7 +240,7 @@ processData(data: any, chartType: ChartType, formValues: any): ChartData {
       case 'line':
         plotOptions = {
           line: {
-            dataLabels: { enabled: true, format: '{point.y:.2f}' },
+            dataLabels: { enabled: true, format: '{point.y:.f}' },
             marker: { enabled: true },
             animation: { duration: 1000 }
           }
@@ -237,7 +250,7 @@ processData(data: any, chartType: ChartType, formValues: any): ChartData {
       case 'column':
         plotOptions = {
           column: {
-            dataLabels: { enabled: true, format: '{point.y:.2f}' },
+            dataLabels: { enabled: true, format: '{point.y:.f}' },
             animation: { duration: 1000 },
             pointPadding: 0.1,
             borderWidth: 0
@@ -248,7 +261,7 @@ processData(data: any, chartType: ChartType, formValues: any): ChartData {
       case 'bar':
         plotOptions = {
           bar: {
-            dataLabels: { enabled: true, format: '{point.y:.2f}' },
+            dataLabels: { enabled: true, format: '{point.y:.f}' },
             animation: { duration: 1000 },
             pointPadding: 0.2,
             borderWidth: 0
@@ -279,7 +292,7 @@ processData(data: any, chartType: ChartType, formValues: any): ChartData {
       
       plotOptions, 
       
-      
+      //...(this.responsive ? { responsive: this.responsive } : {})
 
     };
 
