@@ -31,7 +31,7 @@
   </div>
 
 
-  <label>Choose your Visualized Data by:</label>
+  <label formControlName="data" >Choose your Visualized Data by:</label>
   <div formGroupName="dataType" class="radio-group">
     <label>
       <input type="radio" formControlName="type" value="sql" (change)="onDataTypeChange('sql')"> SQL Query
