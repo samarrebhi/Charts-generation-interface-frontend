@@ -18,6 +18,8 @@ export class PersonnechartsService {
  
   /////////////////
 //private salesapi='http://localhost:8088/api/sales/getsales'
+  //private salesapi='http://localhost:8088/personnes/getallentities'
+
 private salesapi='http://localhost:8088/api/sales/getallentities'
   getallsales(): Observable<any[]> {
     return this.http.get<any[]>(this.salesapi);
