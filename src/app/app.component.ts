@@ -59,7 +59,11 @@ export class AppComponent implements OnInit {
       itemNames: [],
       itemValues: []
     });
+
+
   }
+  
+  
 
   ngOnInit(): void {
     this.getAllData();
@@ -70,9 +74,9 @@ export class AppComponent implements OnInit {
     this.s.getallsales().subscribe(
       (data: any) => {
         console.log('Fetched data:', data);
-        const allAttributes = this.extractAttributesFromData(data);
+        const { allAttributes, nonStringAttributes } = this.extractAttributesFromData(data);
         this.itemNames = Array.from(new Set(allAttributes));
-        this.itemValues = Array.from(new Set(allAttributes)); 
+        this.itemValues = Array.from(new Set(nonStringAttributes)); 
       },
       (error) => {
         console.error('Error fetching data for attributes:', error);
@@ -80,17 +84,19 @@ export class AppComponent implements OnInit {
     );
   }
 
-  extractAttributesFromData(data: any): string[] {
-    const attributes: Set<string> = new Set();
-    
-    
+extractAttributesFromData(data: any): { allAttributes: string[], nonStringAttributes: string[] } {
+    const allAttributes: Set<string> = new Set();
+    const nonStringAttributes: Set<string> = new Set();
     const extractFromObject = (obj: any) => {
       if (obj && typeof obj === 'object') {
         Object.keys(obj).forEach(key => {
-          if (isNaN(Number(key))) {
-            attributes.add(key);
-          }
           const value = obj[key];
+          if (!key.toLowerCase().includes("id") && isNaN(Number(key))) {
+            allAttributes.add(key);
+                        if (typeof value !== 'string') {
+              nonStringAttributes.add(key);
+            }
+          }
   
           if (Array.isArray(value)) {
             value.forEach((item: any) => extractFromObject(item));
@@ -103,8 +109,13 @@ export class AppComponent implements OnInit {
     };
   
     extractFromObject(data);
-    return Array.from(attributes);
+      return {
+      allAttributes: Array.from(allAttributes),
+      nonStringAttributes: Array.from(nonStringAttributes)
+    };
   }
+  
+  
   
   onChartTypeChange(event: any): void {
     const selectedType = event.target.value;
