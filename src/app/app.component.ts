@@ -84,24 +84,27 @@ export class AppComponent implements OnInit {
     );
   }
 
-extractAttributesFromData(data: any): { allAttributes: string[], nonStringAttributes: string[] } {
+  extractAttributesFromData(data: any): { allAttributes: string[], nonStringAttributes: string[] } {
     const allAttributes: Set<string> = new Set();
     const nonStringAttributes: Set<string> = new Set();
+  
     const extractFromObject = (obj: any) => {
       if (obj && typeof obj === 'object') {
         Object.keys(obj).forEach(key => {
           const value = obj[key];
           if (!key.toLowerCase().includes("id") && isNaN(Number(key))) {
-            allAttributes.add(key);
-                        if (typeof value !== 'string') {
-              nonStringAttributes.add(key);
+            // Skip adding keys with object values
+            if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+              allAttributes.add(key);
+              if (typeof value !== 'string') {
+                nonStringAttributes.add(key);
+              }
             }
           }
   
           if (Array.isArray(value)) {
             value.forEach((item: any) => extractFromObject(item));
-          } 
-          else if (typeof value === 'object') {
+          } else if (typeof value === 'object' && value !== null) {
             extractFromObject(value);
           }
         });
@@ -109,7 +112,8 @@ extractAttributesFromData(data: any): { allAttributes: string[], nonStringAttrib
     };
   
     extractFromObject(data);
-      return {
+  
+    return {
       allAttributes: Array.from(allAttributes),
       nonStringAttributes: Array.from(nonStringAttributes)
     };
