@@ -1,0 +1,30 @@
+<form (ngSubmit)="onSubmit()" class="login-form mat-typography">
+    <div class="centered-content">
+      <h2>✨ Formulaire de Connexion ✨</h2>
+      <div class="form-column">
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nom d'utilisateur</mat-label>
+          <input matInput id="username" [(ngModel)]="username" name="username" required />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput id="password" type="password" [(ngModel)]="password" name="password" required />
+        </mat-form-field>
+      </div>
+
+      
+      <button mat-raised-button color="primary" type="submit" class="submit-button">Se connecter</button>
+      <mat-error *ngIf="errorMessage" class="error-message">{{ errorMessage }}</mat-error>
+
+      <!-- Add a margin-top to this div to create space between the button and the registration link -->
+      <div class="form-column register-link">
+        <p>Pas encore de compte ? <a routerLink="/register">S'inscrire</a></p>
+      </div>
+
+    </div>
+  
+    
+  </form>
+  

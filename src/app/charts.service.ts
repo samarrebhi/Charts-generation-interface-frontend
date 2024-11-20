@@ -14,7 +14,7 @@ export class PersonnechartsService {
  
 // change fetched data api from here
 
- // private salesapi='http://localhost:8088/Personnes/getallentities'
+  //private salesapi='http://localhost:8088/Personnes/getallentities'
 private salesapi='http://localhost:8088/api/sales/getallentities'
 
   getallsales(): Observable<any[]> {

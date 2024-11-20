@@ -1,0 +1,95 @@
+
+
+<div class="container"> 
+    
+    <div class="centered-content mat-typography">
+      <h1>✨ Outil de génération des statistiques✨</h1>
+      <h2>
+        Intégrez cet outil dans votre site ou tableau de bord pour explorer vos données de manière interactive et personnalisée (📊📈📉).
+      </h2>
+  </div>
+  
+  
+    <form class="form-container" [formGroup]="chartForm" (ngSubmit)="onSubmit()">
+    
+
+      <mat-form-field appearance="fill">
+          <mat-label >Titre du graphique</mat-label>
+          <input matInput formControlName="title">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label >Sous Titre</mat-label>
+          <input matInput formControlName="subtitle">
+        </mat-form-field>
+
+        
+      
+
+      
+      <div class="form-column"> 
+        <mat-form-field appearance="fill"> 
+          <mat-label for="chartType">Type de graphique:</mat-label> 
+          <mat-select id="chartType" formControlName="chartType" (selectionChange)="onChartTypeChange($event)"> 
+            <mat-option value="line">Line</mat-option> 
+            <mat-option value="column">Column</mat-option> 
+            <mat-option value="bar">Bar</mat-option> 
+            <mat-option value="pie">Pie</mat-option>
+          </mat-select> 
+        </mat-form-field> 
+      </div>
+      
+
+      <div class="form-column">
+        <mat-label>Choisissez vos données par:</mat-label>
+        <mat-radio-group formControlName="dataType">
+        <mat-radio-button value="columnChoice" (change)="onDataTypeChange('columnChoice')">Listes déroulantes</mat-radio-button>
+        <mat-radio-button value="sql" (change)="onDataTypeChange('sql')">Requete SQL </mat-radio-button>
+      </mat-radio-group>
+      </div>
+      <div *ngIf="showAxisTitles" class="form-column">
+     <mat-form-field appearance="fill" >
+        <mat-label>Titre de l'axe X</mat-label>
+        <input matInput formControlName="xAxisTitle">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" >
+        <mat-label>Titre de l'axe Y</mat-label>
+        <input matInput formControlName="yAxisTitle">
+      </mat-form-field>
+</div>
+     
+
+       
+       <mat-form-field appearance="fill" *ngIf="isSqlQuery">
+        <mat-label>SQL Query</mat-label>
+        <textarea matInput formControlName="sqlQuery"></textarea>
+      </mat-form-field>
+
+      <div *ngIf="isColumnChoice" class="form-column">
+
+        <mat-form-field appearance="fill">
+          <mat-label>Données de l'axe X</mat-label>
+          <mat-select formControlName="itemNames">
+            <mat-option *ngFor="let name of itemNames" [value]="name">{{ name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Données de l'axe Y</mat-label>
+          <mat-select formControlName="itemValues">
+            <mat-option *ngFor="let value of itemValues" [value]="value">{{ value }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+     <div class="button-container"> 
+       <button mat-raised-button  color="primary" type="submit" >Générer le graphique</button>
+    </div>
+    
+
+  </form>
+ 
+
+</div> 
+
+ 
+

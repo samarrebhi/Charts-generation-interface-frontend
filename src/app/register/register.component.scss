@@ -29,13 +29,14 @@
   }
   
   
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
+  .submit-button {
+    margin-bottom: 15px; /* Adjust the space between the button and registration link */
   }
-
+  
+  .register-link {
+    margin-top: 15px; /* Adjust the space between the registration link and the button */
+  }
+  
   .button-container {
     display: flex;
     justify-content: center;
@@ -46,6 +47,8 @@
   }
   button{
     width: 50%;
+    height: 100%;
+    padding: 15px;
   }
   
   

@@ -1,0 +1,84 @@
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-image:
+   url('C:/Users/rebhi/OneDrive/Bureau/Charts-generation-interface-frontend/src/assets/images/—Pngtree—hs electives sociology subject for_1443135.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.form-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.centered-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 10vh; /* Full viewport height to center vertically */
+  padding: 16px;
+}
+
+
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 70px;
+  width: 50%;
+  
+}
+button{
+  width: 50%;
+}
+
+
+.container {
+  
+
+  
+  background-color: rgba(128, 128, 128, 0.5);
+  padding: 40px;
+  line-height: 1.7;
+  border-radius: 15px;
+  width: 800px;
+  height: 600px;
+ 
+}
+
+
+
+
+
+
+mat-form-field {
+  width: 80%;
+  margin-bottom: 30px;
+}
+
+mat-select, mat-radio-group {
+  width: 90%;
+}
+
+mat-radio-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+

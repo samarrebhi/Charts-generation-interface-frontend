@@ -1,0 +1,31 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="registerForm" class="register-form mat-typography">
+    <div class="centered-content">
+      <h2>✨ Inscription ✨</h2>
+      <div class="form-column">
+      <mat-form-field appearance="fill">
+        <mat-label>Nom d'utilisateur</mat-label>
+        <input matInput id="username" formControlName="username" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput id="password" type="password" formControlName="password" required />
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Confirmer le mot de passe</mat-label>
+        <input matInput id="confirmPassword" type="password" formControlName="confirmPassword" required />
+      </mat-form-field>
+    </div>
+
+      
+        <button mat-raised-button color="primary" type="submit">S'inscrire</button>
+        <mat-error *ngIf="errorMessage" class="error-message">{{ errorMessage }}</mat-error>
+        <div class="form-column register-link">
+            <p>Vous avez déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+          </div>
+    
+    </div>
+   
+  </form>
+  
